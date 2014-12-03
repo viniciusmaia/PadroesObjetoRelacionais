@@ -87,4 +87,38 @@ public class MapeadorArtista
         }
         return null;
     }
+    
+    public static Artista buscarPorNome(String nome)
+    {
+        Artista objArtista = new Artista();
+        int id = 0;
+        Connection con = Conexao.abreConexao();
+        try
+        {
+            Statement sq_stmt = con.createStatement();
+            
+            String query = "select id, nome from artistas where nome = '" + nome + "'";
+            
+            ResultSet rs = sq_stmt.executeQuery(query);
+            while(rs.next())
+            {
+                id = rs.getInt("id");
+                nome = rs.getString("nome");
+            }
+            
+            objArtista.setId(id);
+            objArtista.setNome(nome);
+            
+            sq_stmt.close();
+            rs.close();
+            con.close();
+            
+            return objArtista;
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("SQLException: " + ex.getMessage());            
+        }
+        return null;
+    }
 }

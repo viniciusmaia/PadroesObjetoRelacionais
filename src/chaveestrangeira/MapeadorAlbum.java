@@ -103,4 +103,54 @@ public class MapeadorAlbum
         }
         return null;
     }
+    
+    public static Album buscarPorTitulo(String titulo)
+    {
+        Album objAlbum = new Album();
+        Artista objArtista = new Artista();
+        String nome = null;
+        int idArtista = 0, idAlbum = 0;
+        Connection con = Conexao.abreConexao();
+        try
+        {
+            Statement sq_stmt = con.createStatement();
+            
+            String query = "select id, titulo, idArtista from albuns where titulo = '" + titulo + "'";
+            
+            ResultSet rs = sq_stmt.executeQuery(query);
+            while(rs.next())
+            {
+                idAlbum = rs.getInt("id");
+                titulo = rs.getString("titulo");
+                idArtista = rs.getInt("idArtista");
+            }
+            
+            objAlbum.setId(idAlbum);
+            objAlbum.setTitulo(titulo);
+            
+            query = "select nome from artistas where id = " + idArtista;
+            
+            rs = sq_stmt.executeQuery(query);
+            while(rs.next())
+            {                
+                nome = rs.getString("nome");
+            }
+            
+            objArtista.setId(idArtista);
+            objArtista.setNome(nome);
+            
+            objAlbum.setAutor(objArtista);
+            
+            sq_stmt.close();
+            rs.close();
+            con.close();
+            
+            return objAlbum;
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("SQLException: " + ex.getMessage());            
+        }
+        return null;
+    }
 }
