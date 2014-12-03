@@ -87,4 +87,41 @@ public class MapeadorLivro
         }
         return null;
     }
+    
+    public static Livro buscarPorTitulo(String titulo)
+    {
+        Livro objLivro = new Livro();
+        double preco = 0;
+        int id = 0;
+        Connection con = Conexao.abreConexao();
+        try
+        {
+            Statement sq_stmt = con.createStatement();
+            
+            String query = "select id, titulo, preco from livros where titulo = '" + titulo + "'";
+            
+            ResultSet rs = sq_stmt.executeQuery(query);
+            while(rs.next())
+            {
+                id = rs.getInt("id");
+                titulo = rs.getString("titulo");
+                preco = rs.getDouble("preco");
+            }
+            
+            objLivro.setId(id);
+            objLivro.setPreco(preco);
+            objLivro.setTitulo(titulo);
+            
+            sq_stmt.close();
+            rs.close();
+            con.close();
+            
+            return objLivro;
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("SQLException: " + ex.getMessage());            
+        }
+        return null;
+    }
 }

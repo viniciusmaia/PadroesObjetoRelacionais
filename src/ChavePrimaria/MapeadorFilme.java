@@ -16,7 +16,7 @@ import java.sql.Statement;
 /*Exemplo do padrão chave primária utilizando uma tabela de chaves*/
 public class MapeadorFilme 
 {
-    public static void insere(Filme objFilme)
+    public static int insere(Filme objFilme)
     {
         Connection con = Conexao.abreConexao();
         
@@ -49,6 +49,7 @@ public class MapeadorFilme
         {
             System.err.println("SQLException: " + ex.getMessage());            
         }
+        return id;
     }
     
     //Método que busca o proximo Id na tabela de chaves
@@ -95,6 +96,40 @@ public class MapeadorFilme
             ResultSet rs = sq_stmt.executeQuery(query);
             while(rs.next())
             {                
+                nome = rs.getString("nome");
+            }
+            
+            objFilme.setId(id);
+            objFilme.setNome(nome);
+            
+            sq_stmt.close();
+            rs.close();
+            con.close();
+            
+            return objFilme;
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("SQLException: " + ex.getMessage());            
+        }
+        return null;
+    }
+    
+    public static Filme buscarPorNome(String nome)
+    {
+        Filme objFilme = new Filme();
+        int id = 0;
+        Connection con = Conexao.abreConexao();
+        try
+        {
+            Statement sq_stmt = con.createStatement();
+            
+            String query = "select id, nome from filmes where nome = '" + nome + "'";
+            
+            ResultSet rs = sq_stmt.executeQuery(query);
+            while(rs.next())
+            {
+                id = rs.getInt("id");
                 nome = rs.getString("nome");
             }
             

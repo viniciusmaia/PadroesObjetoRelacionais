@@ -31,18 +31,17 @@ public class MapeadorPessoa
             String query = "insert into Pessoas (Nome, Rua, Numero, Bairro) values ('" + objPessoa.getNome();
             query += "','" + objEndereco.getRua()+ "','"+ objEndereco.getNumero() + "','";
             query += objEndereco.getBairro() + "')";
-            PreparedStatement ps = con.prepareStatement(query);
             
-            ps.execute();
+            Statement stmt = con.createStatement();
             
-            query = "select max(id) as id from pessoas";
+            stmt.executeUpdate(query,Statement.RETURN_GENERATED_KEYS);
             
-            ResultSet rs = sq_stmt.executeQuery(query);
+            ResultSet rs = stmt.getGeneratedKeys();
             while(rs.next())
             {
-                id = rs.getInt("id");
-            }
-            ps.close();
+                id = rs.getInt(1);
+            }                                
+            stmt.close();
             sq_stmt.close();
             con.close();
             
@@ -88,6 +87,52 @@ public class MapeadorPessoa
             objPessoa.setEndereco(objEndereco);
             objPessoa.setNome(nome);
             objPessoa.setId(id);
+            
+            sq_stmt.close();
+            rs.close();
+            con.close();
+            
+            return objPessoa;
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("SQLException: " + ex.getMessage());            
+        }
+        return null;
+    }
+    
+    public static Pessoa buscarPorNome(String nome)
+    {
+        Pessoa objPessoa = new Pessoa();
+        Endereco objEndereco = new Endereco();
+        
+        int Id = -1;
+        String rua = null, numero = null, bairro = null;
+        
+        try
+        {
+            Connection con = Conexao.abreConexao();
+            
+            Statement sq_stmt = con.createStatement();
+            
+            String query = "select id, rua, numero, bairro from Pessoas where nome = '" + nome + "'";
+            
+            ResultSet rs = sq_stmt.executeQuery(query);
+            while(rs.next())
+            {                
+                Id = rs.getInt("id");
+                numero = rs.getString("numero");
+                rua = rs.getString("rua");
+                bairro = rs.getString("bairro");
+            }
+            
+            objEndereco.setBairro(bairro);
+            objEndereco.setNumero(numero);
+            objEndereco.setRua(rua);
+            
+            objPessoa.setEndereco(objEndereco);
+            objPessoa.setNome(nome);
+            objPessoa.setId(Id);
             
             sq_stmt.close();
             rs.close();
