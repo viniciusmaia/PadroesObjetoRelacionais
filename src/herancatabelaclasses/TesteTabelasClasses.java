@@ -4,17 +4,19 @@
  * and open the template in the editor.
  */
 
-package herancatabelaunica;
+package herancatabelaclasses;
 
 import heranca.Professor;
 import heranca.TecnicoAdministrativo;
+import herancatabelaconcreta.MapeadorProfessor_TabelaConcreta;
+import herancatabelaconcreta.MapeadorTecnicoAdministrativo_TabelaConcreta;
 import java.util.Scanner;
 
 /**
  *
  * @author Vinicius
  */
-public class TesteHerancaTabelaUnica 
+public class TesteTabelasClasses
 {
     public static void main(String[] args)
     {
@@ -37,7 +39,7 @@ public class TesteHerancaTabelaUnica
         professor.setNome(nome);
         professor.setSalario(salario);
         
-        MapeadorProfessor_TabelaUnica.insere(professor);
+        MapeadorProfessor_TabelasClasses.insere(professor);
         
         System.out.println("Informe o nome do técnico administrativo: ");
         nome = entrada.nextLine().replace("\n", "");
@@ -52,7 +54,6 @@ public class TesteHerancaTabelaUnica
         tecnico.setSalario(salario);
         tecnico.setSetor(setor);
         
-        MapeadorTecnicoAdministrativo_TabelaUnica.insere(tecnico);
-        
+        MapeadorTecnicoAdministrativo_TabelasClasses.insere(tecnico);        
     }
 }
